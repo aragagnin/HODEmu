@@ -5,6 +5,8 @@ from scipy.linalg import cholesky, cho_solve, solve_triangular
 
 from _hod_emu_sklearn_gpr_serialized import emu_sklearn_dump_mcri as emu_data_mcri, emu_sklearn_dump_mvir as emu_data_mvir, Mp
 
+__version__='0.1'
+__author__='Antonio Ragagnin <antonio.ragagnin@inaf.it>'
 
 def non_neg_normal_sample(loc, scale,  max_iters=1000):
     "Given a numpy-array of loc and scale, return data from only-positive normal distribution."
@@ -104,7 +106,7 @@ class GPEmulatorNs(GPEmulator):
             ]  
             return np.exp(ln + power_laws),  p
 
-    def Ns(self, inp):
+    def Ns(self, inp, emulator_std=False):
         """
         provided an input in the form of [[Omega_m, Omega_b, sigma8, h0, scale factor, mass], ....]
         returns an array of [[<Ns>, logscatter sigma, emulator error on log A, emulator error on log B, emulator error on log sigma]...],
@@ -123,8 +125,11 @@ class GPEmulatorNs(GPEmulator):
         errorlogA = r[1][:,0]
         errorlogB = r[1][:,1]
         errorlogsigma = r[1][:,2]
-        return np.array([_Ns, sigma, errorlogA, errorlogB, errorlogsigma]).T
-
+        if emulator_std:
+            return np.array([_Ns, sigma, errorlogA, errorlogB, errorlogsigma]).T
+        else:
+            return np.array([_Ns, sigma]).T
+        
     def mock_Ns(self, inp):
         inp = np.atleast_2d(inp)
         _inp = inp[:,:-1]
@@ -142,3 +147,55 @@ def get_emulator_mcri():
     return GPEmulatorNs().set_parameters(**emu_data_mcri)
 def get_emulator_mvir():
     return GPEmulatorNs().set_parameters(**emu_data_mvir)
+
+def main(*argv):
+    try:
+        overdensity = argv[1]
+        omega_m, omega_b, sigma8, h0, z, min_mass, max_mass = map(float, argv[2:-2])
+        bins = int(argv[-2]) 
+        command = argv[-1]
+        if overdensity=='200c':
+            emu = get_emulator_mcri()
+        if overdensity=='vir':
+            emu = get_emulator_mvir()
+        else: 
+            raise Exception('overdensity must be vir or 200c')
+        if command!='mock' and command!='average':
+            raise Exception('command must be mock or average')
+        
+    except Exception as e:
+        
+        print('      ', file=sys.stderr)
+        print('HODEmu v',__version__, 'by',__author__, file=sys.stderr)
+        print('      ', file=sys.stderr)
+        print('Usage: python hod_emu.py overdensity omega_m omega_b sigma8 h0 z min_mass[Msun] max_mass[Msun] bins command ', file=sys.stderr)
+        print('       where overdensity can be `200c` or `vir`, ', file=sys.stderr)
+        print('       omega_m, omega_b, sigma8m h0 are the cosmological parameter', file=sys.stderr)
+        print('       z is the redshift', file=sys.stderr)
+        print('       min_mass, max_mass and bins defines the mass range of the emulation', file=sys.stderr)
+        print('       and command can be `average` to get <Ns> and the respective logscatter or `mock`, file=sys.stderr)
+        print('       to get a list of Ns distributed according a Poisson+Gaussian distribution', file=sys.stderr)
+        print('      ', file=sys.stderr)
+        print('Example 1: python hod_emu.py 200c 0.3 0.04 0.7 0.7 0.8 1e14 1e15 average 20', file=sys.stderr)
+        print('Example 2: python hod_emu.py vir 0.27 0.05 0.7 0.7 0.8 1e14 1.2e14 mock 1000', file=sys.stderr)
+        print('      ', file=sys.stderr)
+        print(str(e), file=sys.stderr)
+        print('      ', file=sys.stderr)
+    massrange = np.logspace(np.log10(min_mass), np.log10(max_mass), bins)
+    input = [
+        [omega_m, omega_b, sigma8, h0, 1./(1.+z), mass]
+        for mass in massrange
+    ]
+    if command='average':
+         Ns, logscatter, emuerror_logA, emuerror_logbeta, emuerror_logsigma = emu.Ns(input).T
+         print('#mass[Msun] <Ns> log-scatter')
+         for mass, n, s in zip(massrange, Ns, logscatter):
+              print(mass, n, s)
+    if command='mock':
+         Ns_mock = emu.mock_Ns(input)
+         print('#mass[Msun] Ns')
+         for mass, n, s in zip(Ns, massrange):
+              print(n, s)
+if __name__ == "__main__":
+    import sys
+    main(sys.argv)
