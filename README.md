@@ -1,3 +1,3 @@
 # HODEmu
 
-HODEmu, based on Ragagnin 2020 in prep. 
+HODEmu, based on Ragagnin 2021 in prep. 
