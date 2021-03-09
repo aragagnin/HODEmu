@@ -4,6 +4,13 @@ HODEmu, is both an executable and a python library that is based on [Ragagnin 20
 
 The Emulator has been trained with [sklearn GPR](https://scikit-learn.org/stable/modules/generated/sklearn.gaussian_process.GaussianProcessRegressor.html), however the class implemented in `hod_emu.py` is a stand-alone porting and does not need sklearn to be installed.
 
+**TOC**:
+
+- [Install](#install)
+- [Execute HODEmu](#execute-hodemu)
+- [Example 1: Obtain normalisation, logslope and gaussian scatter of Ns-M relation](#example-1-obtain-normalisation-logslope-and-gaussian-scatter-of-ns-m-relation)
+- [Example 2: Produce mock catalog of galaxies](#example-2-produce-mock-catalog-of-galaxies)
+
 ## Install
 
 You can either download the file `hod_emu.py` and `_hod_emu_sklearn_gpr_serialized.py`  or install it with `python -mpip install  git+https://github.com/aragagnin/HODEmu`.
