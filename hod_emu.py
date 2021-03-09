@@ -147,7 +147,7 @@ def main():
         print(__description__, file=sys.stderr)
         print(__doc__, file=sys.stderr)
         print('', file=sys.stderr)
-        print(str(e), file=sys.stderr)
+        print('Error: '+str(e), file=sys.stderr)
         print('', file=sys.stderr)
         sys.exit(1)
         
