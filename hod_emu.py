@@ -144,9 +144,6 @@ def main():
         
         print('', file=sys.stderr)
         print(__description__, file=sys.stderr)
-        print(__version__, file=sys.stderr)
-        print(__author__, file=sys.stderr)
-        print(__url__, file=sys.stderr)
         print(__doc__, file=sys.stderr)
         print('', file=sys.stderr)
         print(str(e), file=sys.stderr)
