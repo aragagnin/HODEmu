@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import scipy, scipy.stats
-import argparse
 from argparse import RawTextHelpFormatter
 
 import numpy as np
@@ -17,7 +16,8 @@ __description__ = 'HODEmu from Ragagnin et al. 2021, v'+__version__+' by '+__aut
 __doc__="""
         The following will return 6 floats: A, beta, sigma, emulator error of logA, emulator error of log beta,
         and emulator error of log sigma, where A,beta and sigma comes from Eq. 4-5:
-        ./hod_emu.py --delta 200c --omegam .27 --omegab .04 --sigma8 0.8 --h0 0.7 --z 0.8 
+        Usage: ./hod_emu.py delta  omegam omegab sigma8  h0  redshift 
+        Example: ./hod_emu.py 200c   .27    .04    0.8     0.7 0.8 
         
         Remember that <Ns> = A*(M/5e14)**B and sigma is its log scatter
         
@@ -124,28 +124,32 @@ def get_emulator_m200c():
 def get_emulator_mvir():
     return GPEmulatorNs().set_parameters(**emu_data_mvir)
 
-def main():
-    
-    parser = argparse.ArgumentParser(description=__description__, epilog=__doc__,  formatter_class=RawTextHelpFormatter)
-    parser.add_argument('--delta', type=str, help='Overdensity. Can be either `200c` or `vir` ', default='200c',
-                       choices=['200c','vir'])
-    parser.add_argument('--omegam', type=float, help='Omega_m', default=0.27)
-    parser.add_argument('--omegab', type=float, help='Omega_b', default=0.04)
-    parser.add_argument('--sigma8', type=float, help='sigma_8', default=0.8)
-    parser.add_argument('--h0', type=float, help='h_0', default=0.704)
-    parser.add_argument('--z', type=float, help='redshift', default=0.)
+def main(argv):
+    try:
+        if(len(argv)!=7):
+            raise Exception('you must provide 7 arguments')
+               
+        overdensity = argv[1]
+        if overdensity=='200c':
+            emu = get_emulator_m200c()
+        elif overdensity=='vir':
+            emu = get_emulator_mvir()
+        else: 
+            raise Exception('overdensity must be vir or 200c. Found "%s"'%overdensity)         
 
-    args = parser.parse_args()
-    overdensity = args.delta
-    if overdensity=='200c':
-        emu = get_emulator_m200c()
-    elif overdensity=='vir':
-        emu = get_emulator_mvir()
-    else: 
-        raise Exception('overdensity must be vir or 200c. Found "%s"'%overdensity)
-    
-    omega_m, omega_b, sigma8, h0, z = args.omegam, args.omegab, args.sigma8, args.h0, args.z
-    
+        omega_m, omega_b, sigma8, h0, z = argv[2:]
+    except Exception as e:
+        
+        print('', file=sys.stderr)
+        print(__description__, file=sys.stderr)
+        print(__version__, file=sys.stderr)
+        print(__author__, file=sys.stderr)
+        print(__url__, file=sys.stderr)
+        print(__doc__, file=sys.stderr)
+        print('', file=sys.stderr)
+        print(str(e), file=sys.stderr)
+        print('', file=sys.stderr)
+        
     input = [ [omega_m, omega_b, sigma8, h0, 1./(1.+z)] ]
     r = emu.predict_A_beta_sigma(input)
     A, beta, sigma = r[0][0].T
@@ -157,7 +161,8 @@ def main():
     print(A, beta, sigma, errorlogA, errorlogB, errorlogsigma)
         
 if __name__ == "__main__":
-    main()
+    import sys
+    main(*sys.argv)
 
     
     
