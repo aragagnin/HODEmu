@@ -106,8 +106,8 @@ def non_neg_normal_sample(loc, scale,  max_iters=1000):
     if(np.any(vals[mask_negative])):
         non_neg_normal_sample(loc[mask_negative], scale[mask_negative],  max_iters=1000)
     # after the recursion, we should have all positive numbers
-    mask_negative = vals<0.
-    if(np.any(vals[mask_negative])):
+    
+    if(np.any(vals<0.)):
         raise Exception("non_neg_normal_sample function failed to provide  positive-normal")    
     return vals
 
