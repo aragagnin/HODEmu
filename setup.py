@@ -9,5 +9,6 @@ setup(
     author='Antonio Ragagnin',
     author_email='antonio.ragagnin@inaf.it',
     license='GPLv3+',
+  packages=['hod_emu'],
     zip_safe=False
 )
