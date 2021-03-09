@@ -156,8 +156,8 @@ def main():
     A, beta, sigma = r[0][0].T
     p = r[1]
     errorlogA, errorlogB, errorlogsigma = r[1][0].T
-    print('#A, beta, sigma, Emu error logA, Emu error logB, Emu error log-sigma')
-    print('%.4f'%A, '%.4f'%beta, '%.4f'%sigma, '%.4e'%errorlogA, '%.4e'%errorlogB, '%.4e'%errorlogsigma)
+    print('#A,    beta,  sigma,     Emu error logA, Emu error logB, Emu error log-sigma')
+    print('%.4f'%A, '%.4f'%beta, '%.4f'%sigma, '    %.4e'%errorlogA, '     %.4e'%errorlogB, '     %.4e'%errorlogsigma)
         
 if __name__ == "__main__":
     main()
