@@ -152,7 +152,7 @@ def main():
         sys.exit(1)
         
     input = [ [omega_m, omega_b, sigma8, h0, 1./(1.+z)] ]
-    r = emu.predict_A_beta_sigma(input)
+    r = emu.predict_A_beta_sigma(input, emulator_std=True)
     A, beta, sigma = r[0][0].T
     p = r[1]
     errorlogA = r[1][:,0][0]
