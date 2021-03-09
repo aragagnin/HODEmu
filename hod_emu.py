@@ -155,9 +155,7 @@ def main():
     r = emu.predict_A_beta_sigma(input, emulator_std=True)
     A, beta, sigma = r[0][0].T
     p = r[1]
-    errorlogA = r[1][:,0][0]
-    errorlogB = r[1][:,1][0]
-    errorlogsigma = r[1][:,2][0]
+    errorlogA, errorlogB, errorlogsigma = r[1][0].T
     print('#A, beta, sigma, Emu error logA, Emu error logB, Emu error log-sigma')
     print(A, beta, sigma, errorlogA, errorlogB, errorlogsigma)
         
