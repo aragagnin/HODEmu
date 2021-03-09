@@ -16,6 +16,7 @@ __description__ = 'HODEmu from Ragagnin et al. 2021, v'+__version__+' by '+__aut
 __doc__="""
         The following will return 6 floats: A, beta, sigma, emulator error of logA, emulator error of log beta,
         and emulator error of log sigma, where A,beta and sigma comes from Eq. 4-5:
+        
         Usage: ./hod_emu.py delta  omegam omegab sigma8  h0  redshift 
         Example: ./hod_emu.py 200c   .27    .04    0.8     0.7 0.8 
         
@@ -139,7 +140,7 @@ def main():
         else: 
             raise Exception('overdensity must be vir or 200c. Found "%s"'%overdensity)         
 
-        omega_m, omega_b, sigma8, h0, z = argv[2:]
+        omega_m, omega_b, sigma8, h0, z = map(float, argv[2:])
     except Exception as e:
         
         print('', file=sys.stderr)
