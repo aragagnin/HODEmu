@@ -22,7 +22,7 @@ The file `hod_emu.py` can be executed from your command line interface by runnin
 If you installed it through `pip` you can execute it by running `python -mhod_emu`.
 Finally, you can integrate `hod_emu` in your python code by adding `import hod_emu`.
 
-Check this ipython-notebook for a guided usage:
+Check this ipython-notebook for a guided usage: https://github.com/aragagnin/HODEmu/blob/main/examples.ipynb
 
 ## Example 1: Obtain normalisation, logslope and gaussian scatter of Ns-M relation
 
