@@ -124,7 +124,9 @@ def get_emulator_m200c():
 def get_emulator_mvir():
     return GPEmulatorNs().set_parameters(**emu_data_mvir)
 
-def main(argv):
+def main():
+    import sys
+    argv = sys.argv
     try:
         if(len(argv)!=7):
             raise Exception('you must provide 7 arguments')
@@ -149,6 +151,7 @@ def main(argv):
         print('', file=sys.stderr)
         print(str(e), file=sys.stderr)
         print('', file=sys.stderr)
+        sys.exit(1)
         
     input = [ [omega_m, omega_b, sigma8, h0, 1./(1.+z)] ]
     r = emu.predict_A_beta_sigma(input)
@@ -161,8 +164,7 @@ def main(argv):
     print(A, beta, sigma, errorlogA, errorlogB, errorlogsigma)
         
 if __name__ == "__main__":
-    import sys
-    main(*sys.argv)
+    main()
 
     
     
