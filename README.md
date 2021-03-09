@@ -1,61 +1,45 @@
 # HODEmu
 
-HODEmu, is both an executable and a python library that is based on [Ragagnin 2021 in prep.](https://aragagnin.github.io) and emulates satellite abundance as a function of cosmological parameters `Omega_m, Omega_b, sigma_8, h_0` and redshift. The Emulator is trained on satellite abundance of [Magneticum simulations](https://www.magneticum.org/simulations.html) Box1a/mr spanning 15 cosmologies (see Table 1 of the paper) and on all satellites with a stellar mass cut of M<sub>*</sub> > 2 10<sup>11</sup> M<sub>&odot;</sub>.
-
-The Emulator has been trained with [sklearn GPR](https://scikit-learn.org/stable/modules/generated/sklearn.gaussian_process.GaussianProcessRegressor.html), however the class implemented in `hod_emu.py` is a stand-alone porting and does not need sklearn to be installed.
+HODEmu, is both an executable and a python library that is based on [Ragagnin 2021 in prep.](https://aragagnin.github.io) and emulates satellite abundance as a function of cosmological parameters `Omega_m, Omega_b, sigma_8, h_0` and redshift. The Emulator is trained on satellite abundance of [Magneticum simulations](https://www.magneticum.org/simulations.html) Box1a/mr spanning 15 cosmologies (see Table 1 of the paper) and on all satellites with a stellar mass cut of M<sub>*</sub> > 2 10<sup>11</sup> M<sub>&odot;</sub>. The Emulator has been trained with [sklearn GPR](https://scikit-learn.org/stable/modules/generated/sklearn.gaussian_process.GaussianProcessRegressor.html), however the class implemented in `hod_emu.py` is a stand-alone porting and does not need sklearn to be installed.
 
 **TOC**:
 
 - [Install](#install)
-- [Execute HODEmu](#execute-hodemu)
 - [Example 1: Obtain normalisation, logslope and gaussian scatter of Ns-M relation](#example-1-obtain-normalisation-logslope-and-gaussian-scatter-of-ns-m-relation)
 - [Example 2: Produce mock catalog of galaxies](#example-2-produce-mock-catalog-of-galaxies)
 
 ## Install
 
-You can either download the file `hod_emu.py` and `_hod_emu_sklearn_gpr_serialized.py`  or install it with `python -mpip install  git+https://github.com/aragagnin/HODEmu`.
-The package depends only on [scipy](https://www.scipy.org).
-
-## Execute HODEmu
-
+You can either )1) download the file `hod_emu.py` and `_hod_emu_sklearn_gpr_serialized.py`  or (2) install it with `python -mpip install  git+https://github.com/aragagnin/HODEmu`. The package depends only on [scipy](https://www.scipy.org).
 The file `hod_emu.py` can be executed from your command line interface by running `./hod_emu.py` in the installation folder.
-If you installed it through `pip` you can execute it by running `python -mhod_emu`.
-Finally, you can integrate `hod_emu` in your python code by adding `import hod_emu`.
 
-Check this ipython-notebook for a guided usage: https://github.com/aragagnin/HODEmu/blob/main/examples.ipynb
+Check this ipython-notebook for a guided usage on a python code: https://github.com/aragagnin/HODEmu/blob/main/examples.ipynb
 
 ## Example 1: Obtain normalisation, logslope and gaussian scatter of Ns-M relation
 
-The command following command will output, respectively, normalisation A, log-slope \beta, log-scatter \sigma, and the respective standard deviation from the emulator.
-Note that `--delta` can be only `200c` or `vir` as the paper only emulates these two overdensities.
-Since the emulator has been trained on the residual of the power-law dependency in Eq. 6, the errors are respectively, the standard deviation on log-A, on log-beta, and on log-sigma.
+The following command will output, respectively, normalisation `A`, log-slope `\beta`, log-scatter `\sigma`, and the respective standard deviation from the emulator.
+Since the emulator has been trained on the residual of the power-law dependency in Eq. 6, the errors are respectively, the standard deviation on log-A, on log-beta, and on log-sigma. Note that `--delta` can be only `200c` or `vir` as the paper only emulates these two overdensities.
 
-        ./hod_emu.py --delta 200c --omegam .27 --omegab .04 --sigma8 0.8 --h0 0.7 --z 0.8
+     ./hod_emu.py --delta 200c --omegam .27 --omegab .04 --sigma8 0.8 --h0 0.7 --z 0.8
 
-The following python code will plot the Ns-M relation for a given cosmology and output the corresponding error caming from the Emulator.
-Here we use `hod_emu.get_emulator_m200c()` to obtain an instance of the Emulator class trianed on Delta_200c, and the function `emu.predict_A_beta_sigma(input)` to retrieve A,\beta and \sigma..
-Note that input can be evaluated on a number `N` of data points (in this example only one) and is a N x 5 numpy array and the result is  a N x 3 numpy array. 
 
-To obtain Emulator error one should call `emu.predict_A_beta_sigma(input, emulator_std=True)`. The function will then return a tuple with two elements: (1) thre first element is the same as before (i.e. a N x 3 numpy array with A, \beta and \sigma) and (2) another N x 3 numpy array with the corresponding emulator standard deviations.
+Here below we will use `hod_emyu` as python library to plot the `Ns-M` relation.
+First we use `hod_emu.get_emulator_m200c()` to obtain an instance of the Emulator class trianed on `Delta_200c`, and the function `emu.predict_A_beta_sigma(input)` to retrieve `A`,`\beta` and `\sigma`.
 
+Note that **input** can be evaluated on a number `N` of data points (in this example only one), thus being is a N x 5 numpy array and the **return value** is  a N x 3 numpy array. 
+The parameter `emulator_std=True` will also return  a  N x 3 numpy array with the corresponding emulator standard deviations.
 
 ```python
-Om0 = 0.3
-Ob0 = 0.04
-s8 = 0.8
-h0 = 0.7
-z = 0.8
+Om0, Ob0, s8, h0, z = 0.3, 0.04, 0.8, 0.7 0.9
 
 input = [[Om0, Ob0, s8, h0, 1./(1.+z)]] #the input must be a 2d array because you can feed an array of data points
 
 emu = hod_emu.get_emulator_m200c() # use get_emulator_mvir to obtain the emulator within Delta_vir
 
-A, beta, sigma  =  emu.predict_A_beta_sigma(input).T
+A, beta, sigma  =  emu.predict_A_beta_sigma(input).T #the function outputs a 1x3 matrix 
 
 masses = np.logspace(14.5,15.5,20)
-
-Ns = A*(masses/5e14)**beta
-
+Ns = A*(masses/5e14)**beta 
 
 plt.plot(masses,Ns)
 plt.fill_between(masses, Ns*(1.-sigma), Ns*(1.+sigma),alpha=0.2)
@@ -65,7 +49,7 @@ plt.title(r'$M_\bigstar>2\cdot10^{11}M_\odot \ \ \ \tt{ and }  \ \ \ \ \  r<R_{\
 plt.xscale('log')
 plt.yscale('log')
 
-params_tuple, stds_tuple  =  emu.predict_A_beta_sigma(input, emulator_std=True)
+params_tuple, stds_tuple  =  emu.predict_A_beta_sigma(input, emulator_std=True) #here we also asks for Emulator std deviation
 
 A, beta, sigma = params_tuple.T
 error_logA, error_logbeta, error_logsigma = stds_tuple.T
