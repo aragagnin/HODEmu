@@ -2,6 +2,8 @@
 
 HODEmu, is both an executable and a python library that is based on [Ragagnin 2021 in prep.](https://aragagnin.github.io) and emulates satellite abundance as a function of cosmological parameters `Omega_m, Omega_b, sigma_8, h_0` and redshift. The Emulator is trained on satellite abundance of [Magneticum simulations](https://www.magneticum.org/simulations.html) Box1a/mr spanning 15 cosmologies (see Table 1 of the paper) and on all satellites with a stellar mass cut of M<sub>*</sub> > 2 10<sup>11</sup> M<sub>&odot;</sub>. The Emulator has been trained with [sklearn GPR](https://scikit-learn.org/stable/modules/generated/sklearn.gaussian_process.GaussianProcessRegressor.html), however the class implemented in `hod_emu.py` is a stand-alone porting and does not need sklearn to be installed.
 
+![satellite average abundance for two Magneticum Box1a/mr simulations, from Ragagnin et al. 2021](https://imgur.com/vGyhJC3.png)
+
 **TOC**:
 
 - [Install](#install)
