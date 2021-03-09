@@ -9,6 +9,7 @@ setup(
     author='Antonio Ragagnin',
     author_email='antonio.ragagnin@inaf.it',
     license='GPLv3+',
-    packages=['.'],
+#    packages=['.'],
+    py_modules=["hod_emu","_hod_emu_sklearn_gpr_serialized.py"],
     zip_safe=False
 )
