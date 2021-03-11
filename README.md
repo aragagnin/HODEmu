@@ -24,9 +24,9 @@ Check this ipython-notebook for a guided usage on a python code: https://github.
 ## Example 1: Obtain normalisation, logslope and gaussian scatter of Ns-M relation
 
 The following command will output, respectively, normalisation `A`, log-slope `\beta`, log-scatter `\sigma`, and the respective standard deviation from the emulator.
-Since the emulator has been trained on the residual of the power-law dependency in Eq. 6, the errors are respectively, the standard deviation on log-A, on log-beta, and on log-sigma. Note that `--delta` can be only `200c` or `vir` as the paper only emulates these two overdensities.
+Since the emulator has been trained on the residual of the power-law dependency in Eq. 6, the errors are respectively, the standard deviation on log-A, on log-beta, and on log-sigma. Note that `--delta` can be only `200c` or `vir` as the paper only emulates these two overdensities. 
 
-     ./hod_emu.py --delta 200c --omegam .27 --omegab .04 --sigma8 0.8 --h0 0.7 --z 0.8
+     ./hod_emu.py  200c  .27  .04   0.8  0.7   0.0 #overdensity omega_m omega_b sigma8 h0 redshift
 
 
 Here below we will use `hod_emyu` as python library to plot the `Ns-M` relation.
