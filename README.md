@@ -36,6 +36,7 @@ Note that **input** can be evaluated on a number `N` of data points (in this exa
 The parameter `emulator_std=True` will also return  a  N x 3 numpy array with the corresponding emulator standard deviations.
 
 ```python
+import hod_emu
 Om0, Ob0, s8, h0, z = 0.3, 0.04, 0.8, 0.7, 0.9
 
 input = [[Om0, Ob0, s8, h0, 1./(1.+z)]] #the input must be a 2d array because you can feed an array of data points
